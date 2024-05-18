@@ -34,5 +34,6 @@ export default App;
 
 // TODO: 
 // 1.Find out why the AuthO works but the routes do not work
-// 2. Fix the routes
-// 3. Fix the css on profile page & dashboard page
+// 2. Why it is not redirecting to the profile page
+// 3. Fix the routes
+// 4. Fix the css on profile page & dashboard page
