@@ -7,16 +7,40 @@ function Dashboard() {
   const [tasks, setTasks] = useState(
     JSON.parse(localStorage.getItem("tasks")) || []
   );
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentTask, setCurrentTask] = useState(null);
 
   const addTask = (e) => {
     e.preventDefault();
-    const newTask = { id: Date.now(), name: task, completed: false };
-    setTasks([...tasks, newTask]);
+    if (!isEditing) {
+      const newTask = { id: Date.now(), name: task, completed: false };
+      setTasks([...tasks, newTask]);
+    } else {
+      setTasks(
+        tasks.map((t) => (t.id === currentTask ? { ...t, name: task } : t))
+      );
+      setIsEditing(false);
+      setCurrentTask(null);
+    }
     setTask("");
+  };
+
+  const editTask = (task) => {
+    setTask(task.name);
+    setIsEditing(true);
+    setCurrentTask(task.id);
   };
 
   const deleteTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const toggleTask = (id) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
   React.useEffect(() => {
@@ -25,6 +49,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
+      <h1>Tasks</h1>
       <form onSubmit={addTask}>
         <input
           type="text"
@@ -32,14 +57,40 @@ function Dashboard() {
           onChange={(e) => setTask(e.target.value)}
           required
         />
-        <button type="submit">Add Task</button>
+        <button type="submit">{isEditing ? "Update Task" : "Add Task"}</button>
       </form>
-      {tasks.map((task) => (
-        <div key={task.id}>
-          <p>{task.name}</p>
-          <button onClick={() => deleteTask(task.id)}>Delete</button>
-        </div>
-      ))}
+      {tasks
+        .filter((task) => !task.completed)
+        .map((task) => (
+          <div key={task.id}>
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => toggleTask(task.id)}
+            />
+            <p className={task.completed ? "completed" : ""}>{task.name}</p>
+            <div className="task-buttons" >
+            <button onClick={() => editTask(task)}>Edit</button>
+            <button onClick={() => deleteTask(task.id)}>Delete</button>
+            </div>
+          </div>
+        ))}
+      {tasks
+        .filter((task) => task.completed)
+        .map((task) => (
+          <div key={task.id}>
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => toggleTask(task.id)}
+            />
+            <p className={task.completed ? "completed" : ""}>{task.name}</p>
+            <div className="task-buttons" >
+           <button onClick={() => editTask(task)}>Edit</button>
+            <button onClick={() => deleteTask(task.id)}>Delete</button>
+          </div>
+          </div>
+        ))}
     </div>
   );
 }
