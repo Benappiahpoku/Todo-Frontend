@@ -89,3 +89,13 @@ h1 {
   color: #2c62aa;
 padding-bottom: 30px;
 }
+
+
+/* Media Queries */
+
+@media (max-width: 768px) {
+  .dashboard {
+    width: 95%;
+    padding: 20px;
+  }
+}

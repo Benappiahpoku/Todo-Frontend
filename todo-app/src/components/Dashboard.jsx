@@ -49,7 +49,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <h1>Tasks</h1>
+      <h1>My Day</h1>
       <form onSubmit={addTask}>
         <input
           type="text"
